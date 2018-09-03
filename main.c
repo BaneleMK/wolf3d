@@ -87,17 +87,26 @@ int	main(void)
 	ray.posx = 2;
 	ray.posy = 2;
 	ray.dirx = -1;
-	ray.diry = 0;
+	ray.diry = -1;
+	ray.x = 1;
+	int n = 1;
 	ray.planex = 0;
 	ray.planey = 0.66;
 	sdl.run = 1;
+	sdl.renderer = NULL;
+	sdl.window = NULL;
+	printf("im hitting out\n");
 //	(void)newl;
 	SDL_Init(SDL_INIT_EVERYTHING);
-	sdl.window = SDL_CreateWindow("go for bronze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_W, WIN_H, SDL_WINDOW_RESIZABLE);
+	SDL_CreateWindowAndRenderer(640, 480, 0, &sdl.window, &sdl.renderer);
+	//sdl.window = SDL_CreateWindow("go for bronze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_W, WIN_H, SDL_WINDOW_RESIZABLE);
 	while (sdl.run) // sdl loop (sdl event(s) will)
 	{
-		while (ray.xpos < WIN_W)
+		printf("im hitting in\n");
+		while (ray.x < WIN_W)
 		{
+			n = 1;
+			printf("im hitting in wayyy in\n");
 			ray.camera_x = 2 * ray.x / WIN_W - 1;
 			ray.raydirx = (ray.dirx + ray.planex) * ray.camera_x;
 			ray.raydiry = (ray.diry + ray.planey) * ray.camera_x;
@@ -133,6 +142,7 @@ int	main(void)
 			ray.hit = 0;
 			while (ray.hit == 0)
 			{
+				printf("hit dat wall in\n");
 				if (ray.sideDistx > ray.sideDisty)
 				{
 					ray.sideDisty += ray.deltaDisty;
@@ -149,6 +159,7 @@ int	main(void)
 					ray.hit = 1;
 				}
 			}
+			printf("hit dat in\n");
 			if (ray.side == 0)
 				ray.parallelwalldst = (ray.mapx - ray.posx + \
 				 ((1 - ray.stepx) / 2)) / ray.raydirx ;
@@ -157,6 +168,7 @@ int	main(void)
 				 ((1 - ray.stepy) / 2)) / ray.raydiry ;
 			// this should be and int in order not to have walls of different heights 
 			ray.wallhight = (WIN_H / ray.parallelwalldst);
+			printf("almost to the draw\n");
 
 			// the reason that this was all done this way is so 
 			// that the the wall is centered to the middle of the screen the specifics still confuse me.
@@ -166,18 +178,29 @@ int	main(void)
 			ray.wall_end = ray.wallhight / 2 + WIN_H / 2;
 			if (ray.wall_end >= ray.height)
 				ray.wall_end = ray.height - 1;
-			
+
+			printf("almost there colours now\n");
+
 			if (ray.side == 0)
-				SDL_SetRenderDrawColor(sdl.renderer,255 / 2 ,0, 255 / 2,SDL_ALPHA_OPAQUE);
+				SDL_SetRenderDrawColor(sdl.renderer, 0,0, 255 / 2,SDL_ALPHA_OPAQUE);
 			else
-				SDL_SetRenderDrawColor(sdl.renderer,255,0,255,SDL_ALPHA_OPAQUE);
+				SDL_SetRenderDrawColor(sdl.renderer,0, 0, 255, SDL_ALPHA_OPAQUE);
 			//lets render
+			printf("now....draw\n");
+
             SDL_RenderDrawLine(sdl.renderer, ray.x, ray.wall_start, ray.x, ray.wall_end);
+			printf("drew\n");
 			ray.x++;	
 		}
+		if (n == 1)
+		{
+			n = 0;
+			SDL_RenderPresent(sdl.renderer);
+		}
+		printf("whew\n");
 		while (SDL_PollEvent(&sdl.event))
         {
-            if (sdl.event.type == SDL_QUIT)
+            if (sdl.event.type == SDL_QUIT || sdl.event.key.keysym.sym == SDLK_q)
             {
                 sdl.run = 0;
                 break ;
