@@ -16,13 +16,12 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <math.h>
-
-# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
-//# include "SDL2/SDL.h"
+//# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
+# include "SDL2/SDL.h"
 
 # define MANUALSCALE 0
-# define WIN_W 1240
-# define WIN_H 1240
+# define WIN_W 800
+# define WIN_H 800
 
 typedef struct		s_raycast
 {
@@ -70,7 +69,7 @@ typedef struct		s_raycast
 
 // the parallel ist the distance between the wall and player (real/euclidean dist)
 	double			parallelwalldst;
-	int				wallhight;
+	int				wallheight;
 
 // this is where the wall will start and end.
 	int 			wall_start;
@@ -108,6 +107,8 @@ typedef struct		s_sdl
 	SDL_Window		*window;
 	SDL_Renderer	*renderer;
 	SDL_Event		event;
+	SDL_Rect		skybox;
+	SDL_Rect		ground;
 	int				run;
 }					t_sdl;
 
