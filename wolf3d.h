@@ -100,6 +100,8 @@ typedef struct		s_raycast
 // rotation stuff
 	double			olddirx;
 	double			oldplanex;
+
+	int				strafe;
 }					t_raycast;
 
 typedef struct		s_sdl

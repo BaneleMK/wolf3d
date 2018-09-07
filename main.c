@@ -13,6 +13,33 @@
 #include "wolf3d.h"
 #include <stdio.h>
 
+int map[24][24] = {
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,2,2,2,2,2,2,2,2,2,0,0,3,0,3,0,3,0,0,0,1},
+		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
+		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,2,2,2,2,0,2,2,2,2,0,0,3,0,3,0,3,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	};
+
 int		exit_fun(int key)
 {
 	if (key == 12 || key == 53)
@@ -49,247 +76,232 @@ void	make_int_array(t_raycast *ray, t_array *newl)
 }
 */
 
-//void	raycast(t_array *newl)
+void    init_values(t_raycast *ray, t_sdl *sdl)
+{
+    ray->width = WIN_W;
+	ray->height = WIN_H;
+	ray->posx = 13;
+	ray->posy = 2;
+	ray->dirx = -1;
+	ray->diry = 0;
+	ray->x = -1;
+	ray->planex = 0;
+	ray->planey = 0.66;
+	sdl->run = 1;
+	sdl->renderer = NULL;
+	sdl->window = NULL;
+	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
+}
+
+void    update_map_info(t_raycast *ray)
+{
+    ray->camera_x = 2 * ray->x / (double)ray->height - 1;
+	ray->raydirx = ray->dirx + ray->planex * ray->camera_x;
+	ray->raydiry = ray->diry + ray->planey * ray->camera_x;
+	ray->mapx = (int)ray->posx;
+	ray->mapy = (int)ray->posy;
+	ray->deltaDistx = fabs(1 / ray->raydirx);
+	ray->deltaDisty = fabs(1 / ray->raydiry);
+}
+
+void	side_dist(t_raycast *ray)
+{
+	if (ray->raydirx > 0)
+	{
+		//delta dist x is for the euclidean distance aka real distance->
+		ray->sideDistx = (ray->mapx - ray->posx + 1) * ray->deltaDistx;
+		ray->stepx = 1;
+	}
+	else
+	{
+		ray->sideDistx = (-ray->mapx + ray->posx) * ray->deltaDistx;
+		ray->stepx = -1;
+	}
+	if (ray->raydiry > 0)
+	{
+		ray->sideDisty = (ray->mapy - ray->posy + 1) * ray->deltaDisty;
+		ray->stepy = 1;
+	}
+	else
+	{
+		ray->sideDisty = (-ray->mapy + ray->posy) * ray->deltaDisty;
+		ray->stepy = -1;
+	}
+}
+
+void    wall_detect(t_raycast *ray)
+{
+    ray->hit = 0;
+    while (ray->hit == 0)
+	{
+		if (ray->sideDistx > ray->sideDisty)
+		{
+			ray->sideDisty += ray->deltaDisty;
+			ray->mapy += ray->stepy;
+			ray->side = 0;
+		}
+		else
+		{
+			ray->sideDistx += ray->deltaDistx;
+			ray->mapx += ray->stepx;
+			ray->side = 1;
+		}
+		if (map[ray->mapy][ray->mapx] > 0)
+			ray->hit = 1;
+	}
+}
+
+void    wall_height(t_raycast *ray)
+{
+    if (ray->side == 1)
+        ray->parallelwalldst = (ray->mapx - ray->posx + \
+        (1 - ray->stepx) / 2) / ray->raydirx;
+    else
+        ray->parallelwalldst = (ray->mapy - ray->posy + \
+        (1 - ray->stepy) / 2) / ray->raydiry;
+    ray->wallheight = (int)((ray->height) / ray->parallelwalldst);
+    ray->wall_start = -ray->wallheight / 2 + ray->height / 2;
+    if (ray->wall_start < 0)
+        ray->wall_start = 0;
+    ray->wall_end = ray->wallheight / 2 + ray->height / 2;
+    if (ray->wall_end >= ray->height)
+        ray->wall_end = ray->height - 1;
+}
+
+void    colour_picker(t_raycast *ray, t_sdl *sdl)
+{
+    if (ray->side == 1)
+	{
+		if (ray->raydirx < 0)
+			SDL_SetRenderDrawColor(sdl->renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+		else
+			SDL_SetRenderDrawColor(sdl->renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+	}
+	else
+	{
+		if (ray->raydiry < 0)
+			SDL_SetRenderDrawColor(sdl->renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
+		else
+	    	SDL_SetRenderDrawColor(sdl->renderer,0, 0, 255, SDL_ALPHA_OPAQUE);
+	}
+	SDL_RenderDrawLine(sdl->renderer, ray->x, ray->wall_start, ray->x, ray->wall_end);
+	ray->x++;
+}
+void    control_rotate(t_raycast *ray, t_sdl *sdl)
+{
+
+    if (sdl->event.key.keysym.sym == SDLK_a || sdl->event.key.keysym.sym == SDLK_LEFT)
+    {
+    	ray->olddirx = ray->dirx;
+    	ray->dirx = ray->dirx * cos(ray->rotSpeed) - ray->diry * sin(ray->rotSpeed);
+    	ray->diry = ray->olddirx * sin(ray->rotSpeed) + ray->diry * cos(ray->rotSpeed);
+    	ray->oldplanex = ray->planex;
+    	ray->planex = ray->planex * cos(ray->rotSpeed) - ray->planey * sin(ray->rotSpeed);
+    	ray->planey = ray->oldplanex * sin(ray->rotSpeed) + ray->planey * cos(ray->rotSpeed);
+    	SDL_SetRenderDrawColor(sdl->renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
+    	SDL_RenderClear(sdl->renderer);
+    	ray->x = 0;
+    }
+    if (sdl->event.key.keysym.sym == SDLK_d || sdl->event.key.keysym.sym == SDLK_RIGHT)
+    {
+    	ray->olddirx = ray->dirx;
+    	ray->dirx = ray->dirx * cos(-ray->rotSpeed) - ray->diry * sin(-ray->rotSpeed);
+    	ray->diry = ray->olddirx * sin(-ray->rotSpeed) + ray->diry * cos(-ray->rotSpeed);
+    	ray->oldplanex = ray->planex;
+    	ray->planex = ray->planex * cos(-ray->rotSpeed) - ray->planey * sin(-ray->rotSpeed);
+    	ray->planey = ray->oldplanex * sin(-ray->rotSpeed) + ray->planey * cos(-ray->rotSpeed);
+    	SDL_SetRenderDrawColor(sdl->renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
+    	SDL_RenderClear(sdl->renderer);
+    	ray->x = 0;
+	}
+}
+
+void    control_movement(t_raycast *ray, t_sdl *sdl)
+{
+    if (sdl->event.key.keysym.sym == SDLK_w || sdl->event.key.keysym.sym == SDLK_UP)
+	{
+		if(map[(int)((ray->posx + ray->dirx) * ray->moveSpeed)][(int)(ray->posy)] == 0)
+			ray->posx += ray->dirx * ray->moveSpeed;
+		if(map[(int)(ray->posx)][(int)((ray->posy + ray->diry) * ray->moveSpeed)] == 0)
+			ray->posy += ray->diry * ray->moveSpeed;
+		SDL_SetRenderDrawColor(sdl->renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderClear(sdl->renderer);
+		ray->x = 0;
+	}
+	if (sdl->event.key.keysym.sym == SDLK_s || sdl->event.key.keysym.sym == SDLK_DOWN)
+	{
+		if(map[(int)((ray->posx - ray->dirx) * ray->moveSpeed)][(int)(ray->posy)] == 0)
+			ray->posx -= ray->dirx * ray->moveSpeed;
+		if(map[(int)(ray->posx)][(int)((ray->posy - ray->diry) * ray->moveSpeed)] == 0)
+			ray->posy -= ray->diry * ray->moveSpeed;
+		SDL_SetRenderDrawColor(sdl->renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderClear(sdl->renderer);
+		ray->x = 0;
+	}
+	if (sdl->event.type == SDL_QUIT || sdl->event.key.keysym.sym == SDLK_q || \
+			sdl->event.key.keysym.sym == SDLK_ESCAPE)
+                sdl->run = 0;
+}
+
+void	make_skyandground(t_raycast *ray, t_sdl *sdl)
+{
+	if (ray->x == -1)
+	{
+    	sdl->skybox.x = 0;
+    	sdl->skybox.y = 0;
+    	sdl->skybox.w = WIN_W;
+    	sdl->skybox.h = ray->height / 2;
+    	sdl->ground.x = 0;
+    	sdl->ground.y = ray->height / 2;
+    	sdl->ground.w = WIN_W;
+    	sdl->ground.h = ray->height / 2;
+	}
+    if (ray->x == 0)
+    {
+    	SDL_SetRenderDrawColor(sdl->renderer, 0, 200, 255, SDL_ALPHA_OPAQUE);
+    	SDL_RenderFillRect(sdl->renderer, &sdl->skybox);
+    	SDL_SetRenderDrawColor(sdl->renderer, 100, 100, 100, SDL_ALPHA_OPAQUE);
+    	SDL_RenderFillRect(sdl->renderer, &sdl->ground);
+    }
+}
+
 int	main(void)
 {
-	int map[24][24] = {
-		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,2,2,2,2,2,2,2,2,2,0,0,3,0,3,0,3,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,2,2,2,2,0,2,2,2,2,0,0,3,0,3,0,3,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-	};
 	t_raycast 	ray;
+	t_sdl 	sdl;
 
 	//make_int_array(&ray, newl);
-	t_sdl 	sdl;
-	ray.width = WIN_W;
-	ray.height = WIN_H;
-	ray.posx = 13;
-	ray.posy = 3;
-	ray.dirx = -1;
-	ray.diry = 0;
-	ray.x = 0;
 	int n = 0;
-	ray.planex = 0;
-	ray.planey = 1;
-	sdl.run = 1;
-	sdl.renderer = NULL;
-	sdl.window = NULL;
-
-	sdl.skybox.x = 0;
-	sdl.skybox.y = 0;
-	sdl.skybox.w = WIN_W;
-	sdl.skybox.h = ray.height / 2;
-	sdl.ground.x = 0;
-	sdl.ground.y = ray.height / 2;
-	sdl.ground.w = WIN_W;
-	sdl.ground.h = ray.height / 2;
-	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl.window, &sdl.renderer);
-	//sdl.window = SDL_CreateWindow("go for bronze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_W, WIN_H, SDL_WINDOW_RESIZABLE);
+	init_values(&ray, &sdl);
 	while (sdl.run) // sdl loop (sdl event(s) will)
 	{
-		if (ray.x == 0)
+		make_skyandground(&ray, &sdl);
+		while (ray.x < ray.width)
 		{
-			SDL_SetRenderDrawColor(sdl.renderer, 0, 200, 255, SDL_ALPHA_OPAQUE);
-			SDL_RenderFillRect(sdl.renderer, &sdl.skybox);
-			SDL_SetRenderDrawColor(sdl.renderer, 100, 100, 100, SDL_ALPHA_OPAQUE);
-			SDL_RenderFillRect(sdl.renderer, &sdl.ground);
-		}
-		while (ray.x <= ray.width)
-		{
-			ray.camera_x = 2 * ray.x / (double)ray.height - 1;
-			ray.raydirx = ray.dirx + ray.planex * ray.camera_x;
-			ray.raydiry = ray.diry + ray.planey * ray.camera_x;
-
-			ray.mapx = (int)ray.posx;
-			ray.mapy = (int)ray.posy;
-			ray.deltaDistx = fabs(1 / ray.raydirx);
-			ray.deltaDisty = fabs(1 / ray.raydiry);
-			//ray.deltaDistx = sqrt(1 + (ray.raydiry * ray.raydiry) / (ray.raydirx * ray.raydirx));
-			//ray.deltaDisty = sqrt(1 + (ray.raydirx * ray.raydirx) / (ray.raydiry * ray.raydiry));
-			// ill split it here;
-			if (ray.raydirx >= 0)
-			{
-				//delta dist x is for the euclidean distance aka real distance.
-				ray.sideDistx = ((double)ray.mapx - ray.posx + 1) * ray.deltaDistx;
-				ray.stepx = 1;
-			}
-			else
-			{
-				ray.sideDistx = ((double)ray.mapx - ray.posx) * ray.deltaDistx;
-				ray.stepx = -1;
-			}
-			if (ray.raydiry >= 0)
-			{
-				ray.sideDisty = ((double)ray.mapy - ray.posy + 1) * ray.deltaDisty;
-				ray.stepy = 1;
-			}
-			else
-			{
-				ray.sideDisty = ((double)ray.mapy - ray.posy) * ray.deltaDisty;
-				ray.stepy = -1;
-			}
-			ray.hit = 0;
-			
-			while (ray.hit == 0)
-			{
-				if (ray.sideDistx > ray.sideDisty)
-				{
-					ray.sideDisty += ray.deltaDisty;
-					ray.mapy += ray.stepy;
-					ray.side = 0;
-				}
-				else
-				{
-					ray.sideDistx += ray.deltaDistx;
-					ray.mapx += ray.stepx;
-					ray.side = 1;
-				}
-				if (map[ray.mapx][ray.mapy] > 0)
-					ray.hit = 1;
-			}
+			update_map_info(&ray);
+			side_dist(&ray);
+			wall_detect(&ray);
+			wall_height(&ray);
+			colour_picker(&ray, &sdl);
 			n = 1;
-			if (ray.side == 1)
-			{
-				ray.parallelwalldst = (ray.mapx - ray.posx + \
-				 (1 - ray.stepx) / 2) / ray.raydirx;
-			}
-			else
-			{
-				ray.parallelwalldst = (ray.mapy - ray.posy + \
-				 (1 - ray.stepy) / 2) / ray.raydiry;
-			}
-			// this should be and int in order not to have walls of different heights 
-			ray.wallheight = (int)((ray.height) / ray.parallelwalldst);
-			//printf("almost to the draw\n");
-
-			// the reason that this was all done this way is so 
-			// that the the wall is centered to the middle of the screen the specifics still confuse me.
-			ray.wall_start = (int)((-ray.wallheight) / 2 + ray.height / 2);
-			if (ray.wall_start < 0)
-				ray.wall_start = 0;
-			ray.wall_end = (int)(ray.wallheight / 2 + ray.height / 2);
-			if (ray.wall_end >= ray.height)
-				ray.wall_end = ray.height - 1;
-
-			//printf("wall start = %d		wall end = %d\n", ray.wall_start, ray.wall_end);
-			if (ray.side == 1)
-			{
-				if (ray.raydirx < 0)
-					SDL_SetRenderDrawColor(sdl.renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-				else
-					SDL_SetRenderDrawColor(sdl.renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
-			}
-			else
-			{
-				if (ray.raydiry < 0)
-					SDL_SetRenderDrawColor(sdl.renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
-				else
-					SDL_SetRenderDrawColor(sdl.renderer,0, 0, 255, SDL_ALPHA_OPAQUE);
-			}
-			//lets render
-			//printf("now....draw\n");
-
-            SDL_RenderDrawLine(sdl.renderer, ray.x, ray.wall_start, ray.x, ray.wall_end);
-
-			//printf("drew\n");
-			ray.x++;	
 		}
 		if (n == 1)
 		{
 			n = 0;
-			ray.moveSpeed = 0.01;
-			ray.rotSpeed = 0.01;
+			ray.moveSpeed = 0.1;
+			ray.rotSpeed = 0.05;
 			SDL_RenderPresent(sdl.renderer);
 			printf("Total info:\n\ncamerax = %f\nraydirx = %f		dirx = %f	planex = %f\nraydiry = %f		diry = %f	planey = %f\nmapx = %d	posx = %f	stepx = %d\nmapy = %d	posy = %f	stepy = %d\ndeltaDistx = %f \
-			\ndeltaDisty = %f\nsideDistx = %f\nsideDisty = %f\nparalleWalldist = %f\nwallheight = %d\nwall_start = %d\nwall_end = %d\nside = %d\n\n", \
+			\ndeltaDisty = %f\nsideDistx = %f\nsideDisty = %f\nparalleWalldist = %f\nwallheight = %d\nwall_start = %d\nwall_end = %d\nside = %d\nstrafe = %d\n", \
 			ray.camera_x, ray.raydirx, ray.dirx, ray.planex, ray.raydiry, ray.diry, ray.planey, ray.mapx, ray.posx, ray.stepx, ray.mapy, ray.posy, ray.stepy, ray.deltaDistx, ray.deltaDisty, ray.sideDistx, \
-			ray.sideDisty, ray.parallelwalldst, ray.wallheight, ray.wall_start, ray.wall_end, ray.side);
+			ray.sideDisty, ray.parallelwalldst, ray.wallheight, ray.wall_start, ray.wall_end, ray.side, ray.strafe);
 		}
 		while (SDL_PollEvent(&sdl.event))
         {
-			if (sdl.event.key.keysym.sym == SDLK_w || sdl.event.key.keysym.sym == SDLK_UP)
-			{
-				//if(map[(int)(ray.posx + ray.dirx * ray.moveSpeed)][(int)(ray.posy)])
-					ray.posx += ray.dirx * ray.moveSpeed;
-				//if(map[(int)(ray.posx)][(int)(ray.posy + ray.diry * ray.moveSpeed)])
-					ray.posy += ray.diry * ray.moveSpeed;
-				SDL_SetRenderDrawColor(sdl.renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
-				SDL_RenderClear(sdl.renderer);
-				ray.x = 0;
-			}
-			if (sdl.event.key.keysym.sym == SDLK_s || sdl.event.key.keysym.sym == SDLK_DOWN)
-			{
-				//if(map[(int)(ray.posx - ray.dirx * ray.moveSpeed)][(int)(ray.posy)])
-					ray.posx -= ray.dirx * ray.moveSpeed;
-				//if(map[(int)(ray.posx)][(int)(ray.posy - ray.diry * ray.moveSpeed)])
-					ray.posy -= ray.diry * ray.moveSpeed;
-				//printf("s - x = %d | y = %d\n", (int)(ray.posx - ray.dirx * ray.moveSpeed), (int)(ray.posy - ray.diry * ray.moveSpeed));
-				SDL_SetRenderDrawColor(sdl.renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
-				SDL_RenderClear(sdl.renderer);
-				ray.x = 0;
-			}
-			if (sdl.event.key.keysym.sym == SDLK_a || sdl.event.key.keysym.sym == SDLK_LEFT)
-			{
-				ray.olddirx = ray.dirx;
-				ray.dirx = ray.dirx * cos(ray.rotSpeed) - ray.diry * sin(ray.rotSpeed);
-				ray.diry = ray.olddirx * sin(ray.rotSpeed) + ray.diry * cos(ray.rotSpeed);
-				ray.oldplanex = ray.planex;
-				ray.planex = ray.planex * cos(ray.rotSpeed) - ray.planey * sin(ray.rotSpeed);
-				ray.planey = ray.oldplanex * sin(ray.rotSpeed) + ray.planey * cos(ray.rotSpeed);
-				SDL_SetRenderDrawColor(sdl.renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
-				SDL_RenderClear(sdl.renderer);
-				ray.x = 0;
-
-			}
-			if (sdl.event.key.keysym.sym == SDLK_d || sdl.event.key.keysym.sym == SDLK_RIGHT)
-			{
-				ray.olddirx = ray.dirx;
-				ray.dirx = ray.dirx * cos(-ray.rotSpeed) - ray.diry * sin(-ray.rotSpeed);
-				ray.diry = ray.olddirx * sin(-ray.rotSpeed) + ray.diry * cos(-ray.rotSpeed);
-				ray.oldplanex = ray.planex;
-				ray.planex = ray.planex * cos(-ray.rotSpeed) - ray.planey * sin(-ray.rotSpeed);
-				ray.planey = ray.oldplanex * sin(-ray.rotSpeed) + ray.planey * cos(-ray.rotSpeed);
-				SDL_SetRenderDrawColor(sdl.renderer,0, 0, 0, SDL_ALPHA_OPAQUE);
-				SDL_RenderClear(sdl.renderer);
-				ray.x = 0;
-			}
-			
-			if (sdl.event.key.keysym.sym == SDLK_c)
-            {
-				printf("JUST DO IT!!!!\n\n");
-				SDL_SetRenderDrawColor(sdl.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-				SDL_RenderClear(sdl.renderer);
-				SDL_RenderPresent(sdl.renderer);
-				SDL_Delay(1000);
-            }
-	        if (sdl.event.type == SDL_QUIT || sdl.event.key.keysym.sym == SDLK_q || \
-			sdl.event.key.keysym.sym == SDLK_ESCAPE)
-                sdl.run = 0;
-			SDL_Delay(10);
-			//printf("x = %d | y = %d\n", (int)(ray.posx), (int)(ray.posy));
-        }
+			control_movement(&ray, &sdl);
+			control_rotate(&ray, &sdl);
+	    }
 	}
 	SDL_DestroyWindow(sdl.window);
 	SDL_Quit();
