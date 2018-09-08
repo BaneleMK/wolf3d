@@ -79,6 +79,7 @@ FUNCTIONS = 	ft_strcmp.c \
 				ft_checknmake.c \
 				ft_delmstrjoin.c \
 				ft_freearray.c \
+				ft_freeintarray.c \
 
 OBJECTS = $(FUNCTIONS:.c=.o)
 

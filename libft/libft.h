@@ -85,6 +85,7 @@ int					ft_strnequ(char const *s1, char const *s2, size_t n);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 void				ft_freearray(char **s, int count);
+void				ft_freeintarray(int **str, int elem_count);
 
 size_t				ft_wordstarts(const char *s, char c, size_t x);
 size_t				ft_wordlens(const char *s, char c, size_t x);

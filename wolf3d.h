@@ -29,6 +29,10 @@ typedef struct		s_raycast
 	int				**map;
 	int				xpos;
 
+// the map reading values
+	int				maph;
+	int				mapw;
+
 // the len of the box.
 	long			width;
 	long			height;
@@ -118,14 +122,24 @@ typedef struct		s_sdl
 ** Main.c
 */
 
-int					wolf3d(int fd);
+void				wolf3d(t_raycast *ray, t_sdl *sdl);
 int					exit_fun(int key);
 
 /*
-** draw.c
+** raycasting.c
 */
 
+void				update_map_info(t_raycast *ray);
+void				side_dist(t_raycast *ray);
+void				wall_detect(t_raycast *ray);
+void				wall_height(t_raycast *ray);
+void				colour_picker(t_raycast *ray, t_sdl *sdl);
+
 /*
-** utility.c
+** controls.c
 */
+
+void				control_rotate(t_raycast *ray, t_sdl *sdl);
+void				control_movement(t_raycast *ray, t_sdl *sdl);
+
 #endif
