@@ -16,8 +16,9 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <math.h>
-//# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
-# include "SDL2/SDL.h"
+# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
+
+//# include "SDL2/SDL.h"
 
 # define MANUALSCALE 0
 # define WIN_W 800

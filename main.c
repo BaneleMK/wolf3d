@@ -34,7 +34,8 @@ int		make_int_array(t_raycast *ray, t_array *newl)
 			ray->map[ray->maph][ray->mapw] = ft_atoi(str[ray->mapw]);
 			ray->mapw++;
 		}
-		ft_freearray(str, ray->maph);
+		if (ray->mapw == 0)
+		ft_freearray(str, newl->c);
 		free(newl->arrays[ray->maph]);
 		ray->maph++;
 	}
@@ -48,16 +49,16 @@ void    init_values(t_raycast *ray, t_sdl *sdl)
 	ray->height = WIN_H;
 	ray->posx = 2;
 	ray->posy = 2;
-	ray->dirx = -1;
+	ray->dirx = 1;
 	ray->diry = 0;
 	ray->x = -1;
 	ray->planex = 0;
-	ray->planey = 0.66;
+	ray->planey = -0.66;
 	sdl->run = 1;
 	sdl->renderer = NULL;
 	sdl->window = NULL;
-//	SDL_Init(SDL_INIT_EVERYTHING);
-//	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
+	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
 }
 
 void	make_skyandground(t_raycast *ray, t_sdl *sdl)
@@ -135,7 +136,6 @@ void wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move)
     }
 }
 
-//int	main(void)
 int	raycast(t_array *newl)
 {
 	t_raycast 	ray;
@@ -144,14 +144,15 @@ int	raycast(t_array *newl)
 
 	(void)sdl;
 	(void)move;
-	//if (!(make_int_array(&ray, newl)))
+	if (!(make_int_array(&ray, newl)))
 		return(0);
-	ft_freeintarray(ray.map, newl->no_lines);
-//	init_values(&ray, &sdl);
-/*	while (sdl.run)
+/*	init_values(&ray, &sdl);
+	while (sdl.run)
 		wolf3d(&ray, &sdl, &move);
 	SDL_DestroyWindow(sdl.window);
 	SDL_Quit();*/
+	//ft_freeintarray(ray.map, newl->no_lines);
+	while(1){}
 	return (1);
 }
 
@@ -166,8 +167,8 @@ int		maptowolf(int fd)
 	newl.no_lines = 0;
 	if ((n = checknmake(&newl, fd)) != 1)
 		return (n);
-	//if ((n = raycast(&newl)) != 1)
-	//	return (n);
+	if ((n = raycast(&newl)) != 1)
+		return (n);
 	return (1);
 }
 

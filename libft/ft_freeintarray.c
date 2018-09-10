@@ -19,7 +19,7 @@ void	ft_freeintarray(int **str, int elem_count)
 	y = 0;
 	if (str)
 	{
-		while (y <= elem_count)
+		while (y < elem_count)
 		{
 			free(str[y]);
 			y++;
