@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/30 09:37:16 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/03 15:49:05 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/11 16:42:40 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,18 @@
 # include <math.h>
 # include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
 
-//# include "SDL2/SDL.h"
+/*
+** the linux include file location
+** # include "SDL2/SDL.h"
+*/
 
 # define MANUALSCALE 0
 # define WIN_W 800
 # define WIN_H 800
+# define KEYPRESSED sdl->event.key.keysym.sym
+# define PRESSED sdl->event.type == SDL_KEYDOWN
+# define ROT move->rotSpeed
+# define MSP move->moveSpeed
 
 typedef struct		s_raycast
 {
@@ -42,14 +49,14 @@ typedef struct		s_raycast
 	double			raydiry;
 	int				mapx;
 	int				mapy;
-	double			sideDistx;
-	double			sideDisty;
+	double			sidedistx;
+	double			sidedisty;
 	int				side;
-	double			deltaDistx;
-	double			deltaDisty;
+	double			deltadistx;
+	double			deltadisty;
 	double			parallelwalldst;
 	int				wallheight;
-	int 			wall_start;
+	int				wall_start;
 	int 			wall_end;
 	int				hit;
 	int				stepx;
@@ -57,17 +64,16 @@ typedef struct		s_raycast
 	int				x;
 }					t_raycast;
 
-typedef struct 	s_movement
+typedef struct		s_movement
 {
 	double			moveSpeed;
 	double			rotSpeed;
 	double			olddirx;
 	double			oldplanex;
-}				t_move;
-
-// fps and distance calc stuff...to be seen
-	//uint32_t		time;
-	//uint32_t		oldtime;
+	int				mini_map;
+	int				light_val;
+	int				lighting;
+}					t_move;
 
 typedef struct		s_sdl
 {
@@ -84,7 +90,6 @@ typedef struct		s_sdl
 */
 
 void				wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move);
-int					exit_fun(int key);
 
 /*
 ** raycasting.c
@@ -94,7 +99,7 @@ void				update_map_info(t_raycast *ray);
 void				side_dist(t_raycast *ray);
 void				wall_detect(t_raycast *ray);
 void				wall_height(t_raycast *ray);
-void				colour_picker(t_raycast *ray, t_sdl *sdl);
+void				colour_picker(t_raycast *ray, t_sdl *sdl, t_move *move);
 
 /*
 ** controls.c
@@ -102,5 +107,21 @@ void				colour_picker(t_raycast *ray, t_sdl *sdl);
 
 void				control_rotate(t_raycast *ray, t_sdl *sdl, t_move *move);
 void				control_movement(t_raycast *ray, t_sdl *sdl, t_move *move);
+void				misc(t_raycast *ray, t_sdl *sdl, t_move *move);
+
+/*
+** moregraphics
+*/
+
+void				make_skyandground(t_raycast *ray, t_sdl *sdl);
+void   				lighting(t_raycast *ray, t_move *move);
+void				mini_map(t_raycast *ray);
+
+/*
+** utility
+*/
+
+int					make_int_array(t_raycast *ray, t_array *newl);
+void			    init_values(t_raycast *ray, t_sdl *sdl, t_move *move);
 
 #endif

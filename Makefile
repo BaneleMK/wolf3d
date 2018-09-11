@@ -16,24 +16,25 @@ FLAGS = -Wall -Werror -Wextra
 
 HEADER = wolf3d.h
 
-FUNCTIONS = main.c controls.c raycasting.c
+FUNCTIONS = main.c controls.c raycasting.c moregraphics.c
 
 all: $(NAME)
 
 $(NAME):
-	make -C libft/
-	gcc libft/libft.a -o $(NAME) -I ~/.brew/include -L ~/.brew/lib \
+	cd libft && make all
+	gcc $(FLAGS) libft/libft.a -o $(NAME) -I ~/.brew/include -L ~/.brew/lib \
 		-lSDL2 $(FUNCTIONS)
 
 ex:
-	gcc libft/libft.a -o $(NAME) -I ~/.brew/include -L ~/.brew/lib \
+	gcc $(FLAGS) libft/libft.a -o $(NAME) -I ~/.brew/include -L ~/.brew/lib \
 		-lSDL2 $(FUNCTIONS)
-	./$(NAME) test.wf3d
 
 clean:
-	cd libft && make fclean
+	@ cd libft && make fclean
+	@ rm -f $(OBJECTS)
 
 fclean: clean
-	cd libft && make clean
+	@ cd libft && make clean
+	@ rm -f $(NAME)
 
 re: fclean all
