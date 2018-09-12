@@ -6,7 +6,7 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/30 09:37:16 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/11 16:42:40 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 16:22:47 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define WIN_H 800
 # define KEYPRESSED sdl->event.key.keysym.sym
 # define PRESSED sdl->event.type == SDL_KEYDOWN
-# define ROT move->rotSpeed
-# define MSP move->moveSpeed
+# define ROT move->rotspeed
+# define MSP move->movespeed
 
 typedef struct		s_raycast
 {
@@ -57,7 +57,7 @@ typedef struct		s_raycast
 	double			parallelwalldst;
 	int				wallheight;
 	int				wall_start;
-	int 			wall_end;
+	int				wall_end;
 	int				hit;
 	int				stepx;
 	int				stepy;
@@ -66,8 +66,8 @@ typedef struct		s_raycast
 
 typedef struct		s_movement
 {
-	double			moveSpeed;
-	double			rotSpeed;
+	double			movespeed;
+	double			rotspeed;
 	double			olddirx;
 	double			oldplanex;
 	int				mini_map;
@@ -83,13 +83,31 @@ typedef struct		s_sdl
 	SDL_Rect		skybox;
 	SDL_Rect		ground;
 	int				run;
+	int				draw;
+	int				ret;
 }					t_sdl;
+
+typedef struct		s_dda
+{
+	double			x1;
+	double			x2;
+	double			y1;
+	double			y2;
+	double			x;
+	double			y;
+	double			dx;
+	double			dy;
+	double			step;
+	int				i;
+	int				skystart;
+	int				groundstart;
+}					t_dda;
 
 /*
 ** Main.c
 */
 
-void				wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move);
+void				wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move, t_dda *d);
 
 /*
 ** raycasting.c
@@ -113,15 +131,26 @@ void				misc(t_raycast *ray, t_sdl *sdl, t_move *move);
 ** moregraphics
 */
 
-void				make_skyandground(t_raycast *ray, t_sdl *sdl);
-void   				lighting(t_raycast *ray, t_move *move);
+void				make_skyandground(t_raycast *ray, t_sdl *sdl, t_dda *d);
+void				lighting(t_raycast *ray, t_move *move);
 void				mini_map(t_raycast *ray);
+void				drawdda(t_dda *d, t_sdl *sdl);
+void				fastmake_skyandground(t_raycast *ray, t_sdl *sdl);
 
 /*
 ** utility
 */
 
 int					make_int_array(t_raycast *ray, t_array *newl);
-void			    init_values(t_raycast *ray, t_sdl *sdl, t_move *move);
+void				init_values(t_raycast *ray, t_sdl *sdl, t_move *move);
+void				drawmethod(t_raycast *ray, t_sdl *sdl);
+
+/*
+** validate
+*/
+
+int					mapvalues(t_raycast *ray, int x, int y);
+int					mapisvalid(t_raycast *ray);
+
 
 #endif

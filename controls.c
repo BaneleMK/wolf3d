@@ -6,7 +6,7 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 16:17:06 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/11 16:20:42 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 16:39:45 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	control_movement(t_raycast *ray, t_sdl *sdl, t_move *move)
 			ray->posy -= ray->diry * MSP;
 		ray->x = 0;
 	}
-	if (sdl->event.type == SDL_QUIT || KEYPRESSED == SDLK_ESCAPE)
+	if (sdl->event.type == SDL_QUIT || (KEYPRESSED == SDLK_ESCAPE && PRESSED))
 		sdl->run = 0;
 }
 
@@ -83,4 +83,6 @@ void	misc(t_raycast *ray, t_sdl *sdl, t_move *move)
 			ray->x = 0;
 		}
 	}
+	if (KEYPRESSED == SDLK_z && PRESSED)
+		sdl->draw *= -1;
 }

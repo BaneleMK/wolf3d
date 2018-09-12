@@ -6,7 +6,7 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 14:10:47 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/11 16:28:36 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 15:59:34 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ void	colour_picker(t_raycast *ray, t_sdl *sdl, t_move *move)
 		else
 			COLOUR(sdl->renderer, 0, 0, 255 / SDY, SDL_ALPHA_OPAQUE);
 	}
-	SDL_RenderDrawLine(sdl->renderer, ray->x, \
-		ray->wall_start, ray->x, ray->wall_end);
+	drawmethod(ray, sdl);
 	ray->x++;
 }

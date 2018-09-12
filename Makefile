@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bmkhize <marvin@42.fr>                     +#+  +:+       +#+         #
+#    By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/19 14:56:05 by bmkhize           #+#    #+#              #
-#    Updated: 2018/08/20 14:01:48 by bmkhize          ###   ########.fr        #
+#    Updated: 2018/09/12 14:33:57 by bmkhize          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ FLAGS = -Wall -Werror -Wextra
 
 HEADER = wolf3d.h
 
-FUNCTIONS = main.c controls.c raycasting.c moregraphics.c
+FUNCTIONS = main.c controls.c raycasting.c moregraphics.c validate.c
 
 all: $(NAME)
 

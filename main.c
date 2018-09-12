@@ -6,41 +6,43 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 15:23:04 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/11 16:43:42 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 16:27:19 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf3d.h"
 #include <stdio.h>
 
-void	init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
+void			init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
 {
 	ray->width = WIN_W;
 	ray->height = WIN_H;
-	ray->posx = 2;
-	ray->posy = 2;
 	ray->dirx = -1;
 	ray->diry = 0;
 	ray->x = -1;
 	ray->planex = 0;
-	ray->planey = 0.5;
+	ray->planey = 0.66;
 	sdl->run = 1;
 	sdl->renderer = NULL;
 	sdl->window = NULL;
+	sdl->draw = 1;
 	move->lighting = 1;
 	move->mini_map = 1;
 	move->light_val = 20;
+	move->movespeed = 0.25;
+	move->rotspeed = 0.2;
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
 }
 
-void	wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move)
+void			wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move, t_dda *d)
 {
 	if (ray->x == 0 || ray->x == -1)
 	{
 		SDL_SetRenderDrawColor(sdl->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(sdl->renderer);
-		make_skyandground(ray, sdl);
+		(sdl->draw == 1) ? fastmake_skyandground(ray, sdl) : \
+			make_skyandground(ray, sdl, d);
 		while (ray->x < ray->width)
 		{
 			update_map_info(ray);
@@ -49,8 +51,6 @@ void	wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move)
 			wall_height(ray);
 			colour_picker(ray, sdl, move);
 		}
-		move->moveSpeed = 0.15;
-		move->rotSpeed = 0.25;
 		SDL_RenderPresent(sdl->renderer);
 		if (move->mini_map == 1)
 			mini_map(ray);
@@ -63,24 +63,36 @@ void	wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move)
 	}
 }
 
-int		raycast(t_array *newl)
+int				raycast(t_array *newl)
 {
 	t_raycast	ray;
 	t_sdl		sdl;
 	t_move		move;
+	t_dda		dda;
 
 	if (!(make_int_array(&ray, newl)))
 		return (0);
-	init_values(&ray, &sdl, &move);
-	while (sdl.run)
-		wolf3d(&ray, &sdl, &move);
-	SDL_DestroyWindow(sdl.window);
-	SDL_Quit();
+	if ((sdl.ret = mapisvalid(&ray)) == 1)
+	{
+		init_values(&ray, &sdl, &move);
+		while (sdl.run)
+			wolf3d(&ray, &sdl, &move, &dda);
+		SDL_DestroyWindow(sdl.window);
+		SDL_Quit();
+	}
 	ft_freeintarray(ray.map, newl->no_lines);
+	if (sdl.ret != 1)
+	{
+		if (sdl.ret == -1)
+			ft_putendl("map contains negative value");
+		else
+			(sdl.ret == 0) ? ft_putendl("Map not surrounded by walls") : \
+			ft_putendl("No landing zone for player");
+	}
 	return (1);
 }
 
-int		maptowolf(int fd)
+int				maptowolf(int fd)
 {
 	t_array		newl;
 	int			n;
@@ -96,10 +108,10 @@ int		maptowolf(int fd)
 	return (1);
 }
 
-int		main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
-	int fd;
-	int ret;
+	int			fd;
+	int			ret;
 
 	if (argc == 2)
 	{

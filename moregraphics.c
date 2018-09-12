@@ -6,13 +6,13 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 16:44:19 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/11 16:47:01 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 16:44:24 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf3d.h"
 
-void	make_skyandground(t_raycast *ray, t_sdl *sdl)
+void	fastmake_skyandground(t_raycast *ray, t_sdl *sdl)
 {
 	if (ray->x == -1)
 	{
@@ -31,33 +31,28 @@ void	make_skyandground(t_raycast *ray, t_sdl *sdl)
 	SDL_RenderFillRect(sdl->renderer, &sdl->ground);
 }
 
-int		make_int_array(t_raycast *ray, t_array *newl)
+void	make_skyandground(t_raycast *ray, t_sdl *sdl, t_dda *dda)
 {
-	char	**str;
-
-	ray->maph = 0;
-	if (!(ray->map = (int **)malloc(sizeof(int *) * (newl->no_lines))))
-		return (0);
-	while (newl->arrays[ray->maph])
+	dda->x1 = 0;
+	dda->y1 = 0;
+	dda->x2 = WIN_W;
+	dda->y2 = dda->y1;
+	SDL_SetRenderDrawColor(sdl->renderer, 20, 20, 55, SDL_ALPHA_OPAQUE);
+	while (dda->y1 < ray->height / 2)
 	{
-		ray->mapw = 0;
-		str = ft_strsplit(newl->arrays[ray->maph], ' ');
-		if (!(ray->map[ray->maph] = (int *)malloc(sizeof(int) * newl->c)))
-		{
-			ft_freeintarray(ray->map, ray->maph);
-			return (0);
-		}
-		while (str[ray->mapw])
-		{
-			ray->map[ray->maph][ray->mapw] = ft_atoi(str[ray->mapw]);
-			ray->mapw++;
-		}
-		free(newl->arrays[ray->maph]);
-		ft_freearray(str, newl->c);
-		ray->maph++;
+		drawdda(dda, sdl);
+		dda->y1++;
+		dda->y2 = dda->y1;
 	}
-	free(newl->arrays);
-	return (1);
+	dda->y1 = ray->height / 2;
+	dda->y2 = ray->height / 2;
+	SDL_SetRenderDrawColor(sdl->renderer, 50, 50, 50, SDL_ALPHA_OPAQUE);
+	while (dda->y1 < WIN_H)
+	{
+		drawdda(dda, sdl);
+		dda->y1++;
+		dda->y2 = dda->y1;
+	}
 }
 
 void	lighting(t_raycast *ray, t_move *move)
@@ -104,5 +99,26 @@ void	mini_map(t_raycast *ray)
 		}
 		ft_putchar('\n');
 		y++;
+	}
+}
+
+void	drawdda(t_dda *d, t_sdl *sdl)
+{
+	d->dx = d->x2 - d->x1;
+	d->dy = (d->y2 - d->y1);
+	if (fabs(d->dx) >= fabs(d->dy))
+		d->step = fabs(d->dx);
+	else
+		d->step = fabs(d->dy);
+	d->dx = d->dx / d->step;
+	d->dy = d->dy / d->step;
+	d->x = d->x1;
+	d->y = d->y1;
+	d->i = 0;
+	while (d->i <= d->step && ++d->i)
+	{
+		SDL_RenderDrawPoint(sdl->renderer, d->x, d->y);
+		d->x += d->dx;
+		d->y += d->dy;
 	}
 }
