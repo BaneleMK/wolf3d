@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/30 09:37:16 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/12 16:22:47 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 22:01:19 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <math.h>
-# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
-
+//# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
+# include "SDL2/SDL.h"
 /*
 ** the linux include file location
 ** # include "SDL2/SDL.h"
 */
 
 # define MANUALSCALE 0
-# define WIN_W 800
+# define WIN_W 1300
 # define WIN_H 800
 # define KEYPRESSED sdl->event.key.keysym.sym
 # define PRESSED sdl->event.type == SDL_KEYDOWN

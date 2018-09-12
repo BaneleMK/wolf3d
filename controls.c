@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 16:17:06 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/12 16:39:45 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 22:15:08 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	control_rotate(t_raycast *ray, t_sdl *sdl, t_move *move)
 {
-	if ((KEYPRESSED == SDLK_a || KEYPRESSED == SDLK_LEFT) && PRESSED)
+	if ((KEYPRESSED == SDLK_a || KEYPRESSED == SDLK_LEFT))
 	{
 		move->olddirx = ray->dirx;
 		ray->dirx = ray->dirx * cos(ROT) - ray->diry * sin(ROT);
@@ -24,7 +24,7 @@ void	control_rotate(t_raycast *ray, t_sdl *sdl, t_move *move)
 		ray->planey = move->oldplanex * sin(ROT) + ray->planey * cos(ROT);
 		ray->x = 0;
 	}
-	if ((KEYPRESSED == SDLK_d || KEYPRESSED == SDLK_RIGHT) && PRESSED)
+	if ((KEYPRESSED == SDLK_d || KEYPRESSED == SDLK_RIGHT))
 	{
 		move->olddirx = ray->dirx;
 		ray->dirx = ray->dirx * cos(-ROT) - ray->diry * sin(-ROT);
@@ -69,7 +69,7 @@ void	misc(t_raycast *ray, t_sdl *sdl, t_move *move)
 	}
 	if (KEYPRESSED == SDLK_MINUS && PRESSED)
 	{
-		if (move->light_val < 20)
+		if (move->light_val < 40)
 		{
 			move->light_val += 1;
 			ray->x = 0;

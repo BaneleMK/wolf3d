@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 14:10:47 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/12 15:59:34 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/13 00:29:22 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void	update_map_info(t_raycast *ray)
 {
-	ray->camera_x = 2 * ray->x / (double)ray->height - 1;
+	ray->camera_x = 2 * ray->x / (double)WIN_W - 1;
 	ray->raydirx = ray->dirx + ray->planex * ray->camera_x;
 	ray->raydiry = ray->diry + ray->planey * ray->camera_x;
 	ray->mapx = (int)ray->posx;

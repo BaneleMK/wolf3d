@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+         #
+#    By: banelord <banelord@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/19 14:56:05 by bmkhize           #+#    #+#              #
-#    Updated: 2018/09/12 14:33:57 by bmkhize          ###   ########.fr        #
+#    Updated: 2018/09/12 22:00:48 by banelord         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,9 @@ $(NAME):
 ex:
 	gcc $(FLAGS) libft/libft.a -o $(NAME) -I ~/.brew/include -L ~/.brew/lib \
 		-lSDL2 $(FUNCTIONS)
+
+ubuntu:
+	gcc $(FLAGS) $(FUNCTIONS) -o $(NAME) `pkg-config --cflags --libs sdl2` -lm libft/libft.a
 
 clean:
 	@ cd libft && make fclean

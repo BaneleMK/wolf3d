@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 15:23:04 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/12 16:27:19 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/12 22:56:14 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void			init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
 	ray->diry = 0;
 	ray->x = -1;
 	ray->planex = 0;
-	ray->planey = 0.66;
+	ray->planey = 0.8;
 	sdl->run = 1;
 	sdl->renderer = NULL;
 	sdl->window = NULL;
@@ -30,7 +30,7 @@ void			init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
 	move->mini_map = 1;
 	move->light_val = 20;
 	move->movespeed = 0.25;
-	move->rotspeed = 0.2;
+	move->rotspeed = 0.15;
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
 }
