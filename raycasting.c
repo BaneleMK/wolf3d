@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 14:10:47 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/13 00:29:22 by banelord         ###   ########.fr       */
+/*   Updated: 2018/09/13 13:49:47 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	wall_height(t_raycast *ray)
 	else
 		ray->parallelwalldst = (ray->mapy - ray->posy + \
 		(1 - ray->stepy) / 2) / ray->raydiry;
-	ray->wallheight = (int)((ray->height) / ray->parallelwalldst);
+	ray->wallheight = (int)((ray->height / 2) / ray->parallelwalldst);
 	ray->wall_start = -ray->wallheight / 2 + ray->height / 2;
 	if (ray->wall_start < 0)
 		ray->wall_start = 0;

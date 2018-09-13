@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 15:23:04 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/12 22:56:14 by banelord         ###   ########.fr       */
+/*   Updated: 2018/09/13 13:48:11 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,11 @@ int				maptowolf(int fd)
 	newl.no_lines = 0;
 	if ((n = checknmake(&newl, fd)) != 1)
 		return (n);
-	if ((n = raycast(&newl)) != 1)
-		return (n);
+	if (newl.arrays)
+	{
+		if ((n = raycast(&newl)) != 1)
+			return (n);
+	}
 	return (1);
 }
 
