@@ -6,7 +6,7 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 15:23:04 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/13 13:48:11 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/14 16:17:30 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ void			init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
 	sdl->renderer = NULL;
 	sdl->window = NULL;
 	sdl->draw = 1;
-	move->lighting = 1;
-	move->mini_map = 1;
+	move->lighting = -1;
+	move->mini_map = -1;
 	move->light_val = 20;
-	move->movespeed = 0.25;
-	move->rotspeed = 0.15;
+	move->movespeed = 0.05;
+	move->rotspeed = 0.05;
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
 }
@@ -103,11 +103,19 @@ int				maptowolf(int fd)
 	newl.no_lines = 0;
 	if ((n = checknmake(&newl, fd)) != 1)
 		return (n);
+	if (newl.no_lines >= 500 || newl.c >= 500)
+	{
+		ft_putendl("Wolf3d can only run maps up to 500x500");
+		ft_freearray(newl.arrays, newl.no_lines);
+		return (1);
+	}
 	if (newl.arrays)
 	{
 		if ((n = raycast(&newl)) != 1)
 			return (n);
 	}
+	else
+		return (-3);
 	return (1);
 }
 

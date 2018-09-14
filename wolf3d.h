@@ -6,7 +6,7 @@
 /*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/30 09:37:16 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/13 11:44:15 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/14 16:11:37 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <math.h>
-# include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
+# include "SDL2/SDL.h"
 
 /*
 ** the linux include file location
 ** # include "SDL2/SDL.h"
+** # include "/goinfre/bmkhize/.brew/include/SDL2/SDL.h"
 */
 
 # define MANUALSCALE 0
@@ -28,8 +29,10 @@
 # define WIN_H 800
 # define KEYPRESSED sdl->event.key.keysym.sym
 # define PRESSED sdl->event.type == SDL_KEYDOWN
+# define RELEASED sdl->event.type == SDL_KEYUP
 # define ROT move->rotspeed
 # define MSP move->movespeed
+# define PRD sdl->event.type == SDL_PRESSED
 
 typedef struct		s_raycast
 {
@@ -73,6 +76,9 @@ typedef struct		s_movement
 	int				mini_map;
 	int				light_val;
 	int				lighting;
+
+	int				dir_a;
+	int				dir_d;
 }					t_move;
 
 typedef struct		s_sdl
@@ -151,6 +157,5 @@ void				drawmethod(t_raycast *ray, t_sdl *sdl);
 
 int					mapvalues(t_raycast *ray, int x, int y);
 int					mapisvalid(t_raycast *ray);
-
 
 #endif
