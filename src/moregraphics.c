@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   moregraphics.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 16:44:19 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 00:01:11 by banelord         ###   ########.fr       */
+/*   Updated: 2018/09/15 14:39:16 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	fastmake_skyandground(t_raycast *ray, t_sdl *sdl)
 	}
 	SDL_SetRenderDrawColor(sdl->renderer, 20, 20, 55, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(sdl->renderer, &sdl->skybox);
-	SDL_SetRenderDrawColor(sdl->renderer, 50, 50, 50, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(sdl->renderer, 50, 50, 70, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(sdl->renderer, &sdl->ground);
 }
 
@@ -44,9 +44,7 @@ void	make_skyandground(t_raycast *ray, t_sdl *sdl, t_dda *dda)
 		dda->y1++;
 		dda->y2 = dda->y1;
 	}
-	dda->y1 = ray->height / 2;
-	dda->y2 = ray->height / 2;
-	SDL_SetRenderDrawColor(sdl->renderer, 50, 50, 50, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(sdl->renderer, 70, 50, 50, SDL_ALPHA_OPAQUE);
 	while (dda->y1 < WIN_H)
 	{
 		drawdda(dda, sdl);
@@ -94,7 +92,6 @@ void	mini_map(t_raycast *ray)
 			}
 			else
 				(ray->map[y][x]) != 0 ? ft_putchar('#') : ft_putchar('.');
-			ft_putchar(' ');
 			x++;
 		}
 		ft_putchar('\n');

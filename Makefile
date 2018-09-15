@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: banelord <banelord@student.42.fr>          +#+  +:+       +#+         #
+#    By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/19 14:56:05 by bmkhize           #+#    #+#              #
-#    Updated: 2018/09/14 23:57:14 by banelord         ###   ########.fr        #
+#    Updated: 2018/09/15 12:34:12 by bmkhize          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,11 @@ HEADER = includes/wolf3d.h
 
 SRC = src/
 
-FUNCTIONS = $(SRC)main.c $(SRC)controls.c $(SRC)raycasting.c $(SRC)moregraphics.c $(SRC)validate.c
+FUNCTIONS = $(SRC)main.c \
+			$(SRC)controls.c \
+			$(SRC)raycasting.c \
+			$(SRC)moregraphics.c \
+			$(SRC)validate.c
 
 all: $(NAME)
 
@@ -37,7 +41,6 @@ ubuntu:
 
 clean:
 	@ cd libft && make fclean
-	@ rm -f $(OBJECTS)
 
 fclean: clean
 	@ cd libft && make clean

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 14:10:47 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 00:01:14 by banelord         ###   ########.fr       */
+/*   Updated: 2018/09/15 14:39:12 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,18 @@
 #define SDY ray->sidedisty
 #define SDX ray->sidedistx
 
-void	update_map_info(t_raycast *ray)
+void	update_map_info(t_raycast *ray, t_move *move)
 {
 	ray->camera_x = 2 * ray->x / (double)WIN_W - 1;
 	ray->raydirx = ray->dirx + ray->planex * ray->camera_x;
 	ray->raydiry = ray->diry + ray->planey * ray->camera_x;
 	ray->mapx = (int)ray->posx;
 	ray->mapy = (int)ray->posy;
+	if (ray->x == 0 && move->mini_map == 1)
+	{
+		move->old_mapx = ray->mapx;
+		move->old_mapy = ray->mapy;
+	}
 	ray->deltadistx = fabs(1 / ray->raydirx);
 	ray->deltadisty = fabs(1 / ray->raydiry);
 }

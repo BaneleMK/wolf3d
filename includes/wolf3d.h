@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/30 09:37:16 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 00:01:35 by banelord         ###   ########.fr       */
+/*   Updated: 2018/09/15 14:39:21 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 */
 
 # define MANUALSCALE 0
-# define WIN_W 1300
+# define WIN_W 800
 # define WIN_H 800
-# define KEYPRESSED sdl->event.key.keysym.sym
+# define KEY sdl->event.key.keysym.sym
 # define PRESSED sdl->event.type == SDL_KEYDOWN
 # define RELEASED sdl->event.type == SDL_KEYUP
 # define ROT move->rotspeed
@@ -77,10 +77,13 @@ typedef struct		s_movement
 	int				light_val;
 	int				lighting;
 
+	int				old_mapx;
+	int				old_mapy;
 	SDL_bool		dir_w;
 	SDL_bool		dir_a;
 	SDL_bool		dir_s;
 	SDL_bool		dir_d;
+	SDL_bool		dir_shift;
 }					t_move;
 
 typedef struct		s_sdl
@@ -121,7 +124,7 @@ void				wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move, t_dda *d);
 ** raycasting.c
 */
 
-void				update_map_info(t_raycast *ray);
+void				update_map_info(t_raycast *ray, t_move *move);
 void				side_dist(t_raycast *ray);
 void				wall_detect(t_raycast *ray);
 void				wall_height(t_raycast *ray);
@@ -131,7 +134,7 @@ void				colour_picker(t_raycast *ray, t_sdl *sdl, t_move *move);
 ** controls.c
 */
 
-void				control_rotate(t_raycast *ray, t_sdl *sdl, t_move *move);
+void				control_rotate(t_raycast *ray, t_move *move);
 void				control_movement(t_raycast *ray, t_sdl *sdl, t_move *move);
 void				misc(t_raycast *ray, t_sdl *sdl, t_move *move);
 void				control(t_raycast *ray, t_sdl *sdl, t_move *move);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 15:23:04 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 00:03:38 by banelord         ###   ########.fr       */
+/*   Updated: 2018/09/15 14:30:42 by bmkhize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,14 @@ void			init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
 	move->lighting = -1;
 	move->mini_map = -1;
 	move->light_val = 20;
-	move->movespeed = 0.25;
-	move->rotspeed = 0.05;
+	move->movespeed = 0.005;
+	move->rotspeed = 0.005;
+	move->dir_w = SDL_FALSE;
+	move->dir_a = SDL_FALSE;
+	move->dir_s = SDL_FALSE;
+	move->dir_d = SDL_FALSE;
+	move->old_mapx = 0;
+	move->old_mapy = 0;
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_CreateWindowAndRenderer(WIN_W, WIN_H, 0, &sdl->window, &sdl->renderer);
 }
@@ -44,20 +50,22 @@ void			wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move, t_dda *d)
 			make_skyandground(ray, sdl, d);
 		while (ray->x < ray->width)
 		{
-			update_map_info(ray);
+			update_map_info(ray, move);
 			side_dist(ray);
 			wall_detect(ray);
 			wall_height(ray);
 			colour_picker(ray, sdl, move);
 		}
 		SDL_RenderPresent(sdl->renderer);
-		if (move->mini_map == 1)
+		if (move->mini_map == 1 && move->old_mapx != ray->mapx && \
+			move->old_mapy != ray->mapy)
 			mini_map(ray);
 	}
 	while (SDL_PollEvent(&sdl->event))
 		control(ray, sdl, move);
+	control_movement(ray, sdl, move);
+	control_rotate(ray, move);
 }
-	
 
 int				raycast(t_array *newl)
 {
@@ -99,9 +107,9 @@ int				maptowolf(int fd)
 	newl.no_lines = 0;
 	if ((n = checknmake(&newl, fd)) != 1)
 		return (n);
-	if (newl.no_lines >= 500 || newl.c >= 500)
+	if (newl.no_lines > 500 || newl.c > 500)
 	{
-		ft_putendl("Wolf3d can only run maps up to 500x500");
+		ft_putendl("Wolf3d can only run maps up to 500x500 for practicality");
 		ft_freearray(newl.arrays, newl.no_lines);
 		return (1);
 	}
