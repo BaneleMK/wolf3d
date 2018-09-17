@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/30 09:37:16 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 14:39:21 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/16 21:37:07 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 # define ROT move->rotspeed
 # define MSP move->movespeed
 # define PRD sdl->event.type == SDL_PRESSED
+# define NORMALSPEED 0.005
+# define SUPERSPEED 0.02
 
 typedef struct		s_raycast
 {

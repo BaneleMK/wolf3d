@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 14:10:47 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 14:39:12 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/16 21:41:18 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	update_map_info(t_raycast *ray, t_move *move)
 	ray->mapy = (int)ray->posy;
 	if (ray->x == 0 && move->mini_map == 1)
 	{
-		move->old_mapx = ray->mapx;
-		move->old_mapy = ray->mapy;
+		move->old_mapx = (int)ray->posx;
+		move->old_mapy = (int)ray->posy;
 	}
 	ray->deltadistx = fabs(1 / ray->raydirx);
 	ray->deltadisty = fabs(1 / ray->raydiry);
@@ -87,8 +87,8 @@ void	wall_height(t_raycast *ray)
 		(1 - ray->stepy) / 2) / ray->raydiry;
 	ray->wallheight = (int)((ray->height / 2) / ray->parallelwalldst);
 	ray->wall_start = -ray->wallheight / 2 + ray->height / 2;
-	if (ray->wall_start < 0)
-		ray->wall_start = 0;
+	if (ray->wall_start < 4)
+		ray->wall_start = 4;
 	ray->wall_end = ray->wallheight / 2 + ray->height / 2;
 	if (ray->wall_end >= ray->height)
 		ray->wall_end = ray->height - 1;

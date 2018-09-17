@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 16:17:06 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 14:39:07 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/16 21:37:37 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ void	control_movement(t_raycast *ray, t_sdl *sdl, t_move *move)
 		ray->x = 0;
 	}
 	if (move->dir_shift)
-		move->movespeed = 0.01;
+		move->movespeed = SUPERSPEED;
 	else
-		move->movespeed = 0.005;
+		move->movespeed = NORMALSPEED;
 	if (sdl->event.type == SDL_QUIT || (KEY == SDLK_ESCAPE && PRESSED))
 		sdl->run = 0;
 }

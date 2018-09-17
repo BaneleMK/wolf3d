@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmkhize <bmkhize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: banelord <banelord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 15:23:04 by bmkhize           #+#    #+#             */
-/*   Updated: 2018/09/15 14:30:42 by bmkhize          ###   ########.fr       */
+/*   Updated: 2018/09/16 21:41:36 by banelord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ void			init_values(t_raycast *ray, t_sdl *sdl, t_move *move)
 	move->lighting = -1;
 	move->mini_map = -1;
 	move->light_val = 20;
-	move->movespeed = 0.005;
+	move->movespeed = NORMALSPEED;
 	move->rotspeed = 0.005;
 	move->dir_w = SDL_FALSE;
 	move->dir_a = SDL_FALSE;
 	move->dir_s = SDL_FALSE;
 	move->dir_d = SDL_FALSE;
+	move->dir_shift = SDL_FALSE;
 	move->old_mapx = 0;
 	move->old_mapy = 0;
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -57,8 +58,8 @@ void			wolf3d(t_raycast *ray, t_sdl *sdl, t_move *move, t_dda *d)
 			colour_picker(ray, sdl, move);
 		}
 		SDL_RenderPresent(sdl->renderer);
-		if (move->mini_map == 1 && move->old_mapx != ray->mapx && \
-			move->old_mapy != ray->mapy)
+		if (move->mini_map == 1 && move->old_mapx != (int)ray->posx && \
+			move->old_mapy != (int)ray->posy)
 			mini_map(ray);
 	}
 	while (SDL_PollEvent(&sdl->event))
